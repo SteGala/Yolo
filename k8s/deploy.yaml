@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-server
+spec:
+  selector:
+    matchLabels:
+      run: yolo-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: yolo-server
+    spec:
+      containers:
+      - name: yolo-server
+        image: stegala/yolo-server:tiny
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-server
+  labels:
+    run: yolo-server
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    protocol: TCP
+  selector:
+    run: yolo-server
