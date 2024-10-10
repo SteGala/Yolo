@@ -28,6 +28,7 @@ def process_image_repeatedly(framerate, duration, url):
         KeyboardInterrupt: If the processing is interrupted by the user.
     """
     stats = {}
+    start_time = time.time()
 
     # Replace with your server URL
     url = 'http://192.168.11.90:32025/process_frames'
@@ -67,6 +68,9 @@ def process_image_repeatedly(framerate, duration, url):
                 raise KeyboardInterrupt
             
             before = time.time()
+
+            if int(before - start_time) > duration:
+                raise KeyboardInterrupt
 
             # Send frame to the server
             files = {'frames': ('frame.jpg', frame_bytes.getvalue(), 'image/jpeg')}
@@ -109,4 +113,6 @@ def process_image_repeatedly(framerate, duration, url):
 if __name__ == "__main__":
     
     check_and_delete_file("result.dat")
-    process_image_repeatedly(20, 600, 'http://<ip>:<port>/process_frames')
+    for i in range(1, 11):
+        process_image_repeatedly(i, 60, 'http://<ip>:<port>/process_frames')
+        time.sleep(60)
